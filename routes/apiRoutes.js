@@ -1,29 +1,30 @@
-// Get route
-// Post Route
-// Delete Route
 const router = require('express').Router();
-const uuid = require('../helpers/uuid');
+const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
+const noteID = require('../helpers/uuid');
 
-router.get('/notes', (req,res)=>{
-    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
-})
+// GET Route for retrieving all the router
+router.get('/notes', (req, res) => {
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+});
+
+// POST Route for a new UX/UI tip
 router.post('/notes', (req, res) => {
-    
-  
-    const { title, text } = req.body;
-  
-    if (req.body) {
-      const newNote = {
-        title,
-        text,
-        note_id: uuid(),
-      };
-  
-      readAndAppend(newNote, './db/db.json');
-      res.json(`New Note Added!`);
-    } else {
-      res.error('Error in adding new note');
-    }
-  });
-  
-  module.exports = router;
+  console.log(req.body);
+
+  const { title, text} = req.body;
+
+  if (req.body) {
+    const newComment = {
+      title,
+      text,
+      noteID:noteID(),
+    };
+
+    readAndAppend(newComment, './db/db.json');
+    res.json(`Note added successfully`);
+  } else {
+    res.error('Error in adding new note');
+  }
+});
+
+module.exports = router;
